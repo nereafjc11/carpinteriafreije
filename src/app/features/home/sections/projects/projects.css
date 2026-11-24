@@ -1,0 +1,201 @@
+
+:host {
+  display: block;
+}
+
+.projects {
+  background: #F9F6F1;
+  padding: 85px 7%;
+}
+
+.projects-container {
+  max-width: 1250px;
+  margin: auto;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.eyebrow {
+  color: #7A4A2A;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.section-heading h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: clamp(28px, 4vw, 40px);
+  color: #3B2314;
+  margin: 15px 0;
+}
+
+.section-heading p {
+  color: #817469;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.project-card {
+  background: white;
+  border: 1px solid #E6D5C3;
+  border-radius: 11px;
+  overflow: hidden;
+  transition: .3s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(59, 35, 20, .12);
+}
+
+.project-image {
+  position: relative;
+  height: 260px;
+  overflow: hidden;
+}
+
+.project-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease;
+}
+
+.project-card:hover .project-image img {
+  transform: scale(1.05);
+}
+
+.project-category {
+  position: absolute;
+  bottom: 14px;
+  left: 14px;
+
+  background: #3B2314;
+  color: #F9F6F1;
+
+  padding: 7px 12px;
+  border-radius: 4px;
+
+  font-size: 11px;
+  letter-spacing: .5px;
+}
+
+.project-info {
+  position: relative;
+  padding: 20px;
+  padding-right: 45px;
+}
+
+.project-info h3 {
+  color: #3B2314;
+  font-size: 17px;
+  margin: 0 0 9px;
+}
+
+.project-info p {
+  color: #817469;
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.project-arrow {
+  position: absolute;
+  right: 20px;
+  top: 22px;
+  color: #C69362;
+  font-size: 21px;
+}
+
+.projects-footer {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.projects-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 15px;
+
+  padding: 13px 25px;
+
+  border: 1px solid #7A4A2A;
+  border-radius: 5px;
+
+  color: #3B2314;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+
+  transition: .25s;
+}
+
+.projects-button:hover {
+  background: #3B2314;
+  color: white;
+}
+
+@media (max-width: 850px) {
+  .projects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .projects {
+    padding: 65px 20px;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .project-image {
+    height: 250px;
+  }
+}
+/* ESTADOS DE LA GALERÍA */
+
+.projects-state {
+  text-align: center;
+  padding: 45px 20px;
+  color: #817469;
+  font-size: 14px;
+}
+
+.projects-state button {
+  display: block;
+  margin: 15px auto 0;
+  padding: 10px 20px;
+  border: 1px solid #7A4A2A;
+  border-radius: 5px;
+  background: transparent;
+  color: #3B2314;
+  cursor: pointer;
+}
+
+.projects-state button:hover {
+  background: #3B2314;
+  color: white;
+}
+
+.project-image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #E6D5C3;
+  color: #7A4A2A;
+  font-size: 14px;
+}
+

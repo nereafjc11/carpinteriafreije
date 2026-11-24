@@ -1,0 +1,189 @@
+
+<div class="admin-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <a routerLink="/" class="admin-brand">
+      <span class="brand-icon">⌂</span>
+      <span>
+        CARPINTERÍA
+        <strong>FREIJE</strong>
+      </span>
+    </a>
+
+    <div class="sidebar-label">MENÚ PRINCIPAL</div>
+
+    <nav class="sidebar-nav">
+
+      <a routerLink="/admin" routerLinkActive="active"
+         [routerLinkActiveOptions]="{ exact: true }">
+        <span>⌂</span> Inicio
+      </a>
+
+      <a routerLink="/admin/proyectos" routerLinkActive="active">
+        <span>▤</span> Proyectos
+      </a>
+
+      <a routerLink="/admin/proyectos/nuevo">
+        <span>＋</span> Añadir proyecto
+      </a>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+      <a href="/" target="_blank">
+        <span>↗</span> Ver página web
+      </a>
+
+      <button type="button" (click)="logout()">
+        <span>⇥</span> Cerrar sesión
+      </button>
+
+    </div>
+
+  </aside>
+
+  <!-- CONTENIDO -->
+  <main class="admin-main">
+
+    <header class="topbar">
+      <div>
+        <span class="topbar-label">ÁREA DE ADMINISTRACIÓN</span>
+        <h2>Panel de control</h2>
+      </div>
+
+      <div class="user-info">
+        <div class="user-avatar">F</div>
+        <div>
+          <strong>Administrador</strong>
+          <small>{{ userEmail }}</small>
+        </div>
+      </div>
+    </header>
+
+    <section class="dashboard-content">
+
+      <div class="welcome-section">
+        <div>
+          <span class="eyebrow">CARPINTERÍA FREIJE</span>
+          <h1>¡Bienvenido!</h1>
+          <p>Gestiona los trabajos y fotografías de tu carpintería.</p>
+        </div>
+
+        <a routerLink="/admin/proyectos/nuevo"
+           class="primary-button">
+          ＋ Añadir proyecto
+        </a>
+      </div>
+
+      <!-- ESTADÍSTICAS -->
+      <div class="stats-grid">
+
+        <article class="stat-card">
+          <div class="stat-icon">▤</div>
+          <span>Total de proyectos</span>
+          <strong>{{ totalProjects }}</strong>
+          <small>Trabajos registrados</small>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon">✓</div>
+          <span>Publicados</span>
+          <strong>{{ publishedProjects }}</strong>
+          <small>Visibles en la web</small>
+        </article>
+
+        <article class="stat-card">
+          <div class="stat-icon">◷</div>
+          <span>Borradores</span>
+          <strong>{{ draftProjects }}</strong>
+          <small>Pendientes de publicar</small>
+        </article>
+
+      </div>
+
+      <!-- ÚLTIMOS PROYECTOS -->
+      <section class="projects-section">
+
+        <div class="section-header">
+          <div>
+            <span class="eyebrow">ACTIVIDAD</span>
+            <h2>Últimos proyectos</h2>
+          </div>
+
+          <a routerLink="/admin/proyectos" class="text-link">
+            Ver todos →
+          </a>
+        </div>
+
+        @if (loading) {
+          <div class="empty-state">
+            Cargando proyectos...
+          </div>
+        }
+
+        @else if (errorMessage) {
+          <div class="empty-state error-state">
+            {{ errorMessage }}
+            <button type="button" (click)="loadDashboard()">
+              Reintentar
+            </button>
+          </div>
+        }
+
+        @else if (projects.length === 0) {
+          <div class="empty-state">
+            <div class="empty-icon">▧</div>
+            <h3>Aún no tienes proyectos</h3>
+            <p>Cuando añadas trabajos aparecerán aquí.</p>
+
+            <a routerLink="/admin/proyectos/nuevo"
+               class="primary-button">
+              Añadir mi primer proyecto
+            </a>
+          </div>
+        }
+
+        @else {
+          <div class="projects-table">
+
+            <div class="table-header">
+              <span>PROYECTO</span>
+              <span>CATEGORÍA</span>
+              <span>FECHA</span>
+              <span>ESTADO</span>
+            </div>
+
+            @for (project of projects.slice(0, 5); track project.id) {
+              <div class="table-row">
+
+                <strong>{{ project.title }}</strong>
+
+                <span>{{ project.category }}</span>
+
+                <span>
+                  {{ project.created_at | date:'dd/MM/yyyy' }}
+                </span>
+
+                <span>
+                  <span class="status"
+                    [class.published]="project.published">
+                    {{ project.published ? 'Publicado' : 'Borrador' }}
+                  </span>
+                </span>
+
+              </div>
+            }
+
+          </div>
+        }
+
+      </section>
+
+    </section>
+
+  </main>
+
+</div>

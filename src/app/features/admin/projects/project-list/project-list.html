@@ -1,0 +1,155 @@
+
+<div class="projects-page">
+
+  <header class="page-header">
+    <div>
+      <span class="eyebrow">GESTIÓN DE CONTENIDO</span>
+      <h1>Mis proyectos</h1>
+      <p>Administra los trabajos que aparecen en tu página web.</p>
+    </div>
+
+    <a routerLink="/admin/proyectos/nuevo" class="add-button">
+      ＋ Añadir proyecto
+    </a>
+  </header>
+
+  <section class="stats-bar">
+    <div>
+      <span>Total de proyectos</span>
+      <strong>{{ projects.length }}</strong>
+    </div>
+
+    <div>
+      <span>Publicados</span>
+      <strong>{{ projects.filter(p => p.published).length }}</strong>
+    </div>
+
+    <div>
+      <span>Borradores</span>
+      <strong>{{ projects.filter(p => !p.published).length }}</strong>
+    </div>
+  </section>
+
+  <section class="toolbar">
+
+    <input
+      type="search"
+      placeholder="Buscar proyectos..."
+      [(ngModel)]="search"
+    />
+
+    <div class="filters">
+      <button [class.active]="filter === 'all'"
+        (click)="filter = 'all'">Todos</button>
+
+      <button [class.active]="filter === 'published'"
+        (click)="filter = 'published'">Publicados</button>
+
+      <button [class.active]="filter === 'draft'"
+        (click)="filter = 'draft'">Borradores</button>
+    </div>
+
+  </section>
+
+  @if (loading) {
+    <div class="message">Cargando proyectos...</div>
+  }
+
+  @else if (errorMessage) {
+    <div class="message error">
+      {{ errorMessage }}
+      <button (click)="loadProjects()">Reintentar</button>
+    </div>
+  }
+
+  @else if (filteredProjects.length === 0) {
+    <div class="empty-state">
+      <span>▧</span>
+      <h2>No hay proyectos</h2>
+      <p>No encontramos trabajos con esos criterios.</p>
+
+      <a routerLink="/admin/proyectos/nuevo" class="add-button">
+        Añadir proyecto
+      </a>
+    </div>
+  }
+
+  @else {
+
+    <section class="projects-grid">
+
+      @for (project of filteredProjects; track project.id) {
+
+        <article class="project-card">
+
+          <div class="project-image">
+
+            @if (project.image_url) {
+              <img [src]="project.image_url" [alt]="project.title" />
+            } @else {
+              <div class="no-image">Sin fotografía</div>
+            }
+
+            @if (project.featured) {
+              <span class="featured-label">Destacado</span>
+            }
+
+          </div>
+
+          <div class="project-info">
+
+            <div class="project-meta">
+              <span>{{ project.category }}</span>
+
+              <span class="status"
+                [class.published]="project.published">
+                {{ project.published ? 'Publicado' : 'Borrador' }}
+              </span>
+            </div>
+
+            <h3>{{ project.title }}</h3>
+
+            <p>{{ project.description || 'Sin descripción' }}</p>
+
+            <div class="project-footer">
+
+              <span class="date">
+                {{ project.created_at | date:'dd/MM/yyyy' }}
+              </span>
+
+              <div class="actions">
+
+                <button
+                  class="visibility-button"
+                  (click)="togglePublished(project)"
+                  [title]="project.published ? 'Despublicar' : 'Publicar'">
+                  {{ project.published ? 'Ocultar' : 'Publicar' }}
+                </button>
+
+                <a
+                  [routerLink]="['/admin/proyectos', project.id]"
+                  class="edit-button">
+                  Editar
+                </a>
+
+                <button
+                  class="delete-button"
+                  (click)="deleteProject(project)">
+                  Eliminar
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </article>
+
+      }
+
+    </section>
+
+  }
+
+</div>

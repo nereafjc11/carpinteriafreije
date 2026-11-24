@@ -1,0 +1,303 @@
+
+<div class="form-page">
+
+  <header class="page-header">
+    <div>
+
+      <a routerLink="/admin/proyectos" class="back-link">
+        ← Volver a proyectos
+      </a>
+
+      <span class="eyebrow">GESTIÓN DE PROYECTOS</span>
+
+      <h1>
+        {{ isEditMode ? 'Editar proyecto' : 'Añadir proyecto' }}
+      </h1>
+
+      <p>
+        {{ isEditMode
+          ? 'Modifica la información y las fotografías de tu trabajo.'
+          : 'Añade un nuevo trabajo a tu portfolio.' }}
+      </p>
+
+    </div>
+  </header>
+
+  @if (loadingProject) {
+
+    <div class="form-card">
+      Cargando proyecto...
+    </div>
+
+  } @else {
+
+    <form (ngSubmit)="saveProject()" #projectForm="ngForm">
+
+      <div class="form-layout">
+
+        <!-- INFORMACIÓN DEL PROYECTO -->
+
+        <section class="form-card">
+
+          <div class="card-heading">
+            <h2>Información del proyecto</h2>
+            <p>Describe el trabajo realizado.</p>
+          </div>
+
+          <div class="field">
+
+            <label for="title">Nombre del proyecto *</label>
+
+            <input
+              id="title"
+              type="text"
+              name="title"
+              [(ngModel)]="title"
+              placeholder="Ej. Escalera de madera a medida"
+              required
+            />
+
+          </div>
+
+          <div class="field">
+
+            <label for="category">Categoría *</label>
+
+            <select
+              id="category"
+              name="category"
+              [(ngModel)]="category"
+              required
+            >
+
+              <option value="">
+                Selecciona una categoría
+              </option>
+
+              @for (item of categories; track item) {
+                <option [value]="item">
+                  {{ item }}
+                </option>
+              }
+
+            </select>
+
+          </div>
+
+          <div class="field">
+
+            <label for="description">Descripción</label>
+
+            <textarea
+              id="description"
+              name="description"
+              [(ngModel)]="description"
+              rows="6"
+              placeholder="Describe los materiales, el trabajo realizado y los detalles del proyecto..."
+            ></textarea>
+
+          </div>
+
+          <div class="checkbox-field">
+
+            <label>
+
+              <input
+                type="checkbox"
+                name="featured"
+                [(ngModel)]="featured"
+              />
+
+              <span>
+                <strong>Proyecto destacado</strong>
+                <small>Destacar este trabajo en la web.</small>
+              </span>
+
+            </label>
+
+          </div>
+
+        </section>
+
+        <!-- FOTOGRAFÍAS -->
+
+        <section class="form-card">
+
+          <div class="card-heading">
+
+            <h2>Fotografías del proyecto</h2>
+
+            <p>
+              Añade hasta 10 imágenes. Máximo 10 MB cada una.
+            </p>
+
+          </div>
+
+          <label class="upload-area">
+
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              (change)="onFilesSelected($event)"
+            />
+
+            <span class="upload-icon">↑</span>
+
+            <strong>Seleccionar fotografías</strong>
+
+            <small>
+              Haz clic para buscar imágenes en tu ordenador
+            </small>
+
+          </label>
+
+          @if (gallery.length > 0) {
+
+            <div class="preview-heading">
+
+              <strong>Fotografías del proyecto</strong>
+
+              <span>{{ gallery.length }} / 10</span>
+
+            </div>
+
+            <div class="preview-grid">
+
+              @for (preview of gallery; track preview.url; let i = $index) {
+
+                <div class="preview-item">
+
+                  <img
+                    [src]="preview.url"
+                    alt="Fotografía del proyecto"
+                  />
+
+                  <button
+                    type="button"
+                    class="remove-image"
+                    (click)="removeImage(i)"
+                    aria-label="Eliminar fotografía"
+                  >
+                    ×
+                  </button>
+
+                  @if (i === 0) {
+                    <span class="main-image-label">
+                      Principal
+                    </span>
+                  }
+
+                </div>
+
+
+<div class="image-order">
+
+  <button
+    type="button"
+    (click)="moveImage(i, -1)"
+    [disabled]="i === 0"
+    aria-label="Mover fotografía a la izquierda"
+  >
+    ←
+  </button>
+
+  <button
+    type="button"
+    (click)="moveImage(i, 1)"
+    [disabled]="i === gallery.length - 1"
+    aria-label="Mover fotografía a la derecha"
+  >
+    →
+  </button>
+
+</div>
+
+
+              }
+
+            </div>
+
+            <small>
+              La primera fotografía será la portada del proyecto.
+              El orden se puede cambiar eliminando y añadiendo imágenes.
+            </small>
+
+          }
+
+        </section>
+
+      </div>
+
+      <!-- PUBLICACIÓN -->
+
+      <section class="form-card publication-card">
+
+        <div>
+
+          <h2>Publicación</h2>
+
+          <p>
+            Decide si el proyecto será visible en la web.
+          </p>
+
+        </div>
+
+        <label class="publish-toggle">
+
+          <input
+            type="checkbox"
+            name="published"
+            [(ngModel)]="published"
+          />
+
+          <span>
+            {{ published ? 'Publicado' : 'Borrador' }}
+          </span>
+
+        </label>
+
+      </section>
+
+      <!-- ERRORES -->
+
+      @if (errorMessage) {
+
+        <div class="error-message">
+          {{ errorMessage }}
+        </div>
+
+      }
+
+      <!-- BOTONES -->
+
+      <footer class="form-actions">
+
+        <a
+          routerLink="/admin/proyectos"
+          class="cancel-button"
+        >
+          Cancelar
+        </a>
+
+        <button
+          type="submit"
+          class="save-button"
+          [disabled]="loading || projectForm.invalid || loadingProject"
+        >
+
+          @if (loading) {
+            Guardando...
+          } @else {
+            {{ isEditMode ? 'Guardar cambios →' : (published ? 'Publicar proyecto →' : 'Guardar borrador →') }}
+          }
+
+        </button>
+
+      </footer>
+
+    </form>
+
+  }
+
+</div>
